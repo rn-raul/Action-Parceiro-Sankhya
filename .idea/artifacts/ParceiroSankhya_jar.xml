@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ParceiroSankhya:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ParceiroSankhya_jar</output-path>
+    <root id="archive" name="ParceiroSankhya.jar">
+      <element id="module-output" name="ParceiroSankhya" />
+    </root>
+  </artifact>
+</component>

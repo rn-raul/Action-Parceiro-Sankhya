@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="libs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../libraries/jackson-annotations-2.17.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../libraries/jackson-core-2.17.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../libraries/jackson-databind-2.17.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../libraries/jackson-datatype-jsr310-2.17.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../libraries/jape.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../libraries/SankhyaW-extensions.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../libraries/snk-wrapper-1.1.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
