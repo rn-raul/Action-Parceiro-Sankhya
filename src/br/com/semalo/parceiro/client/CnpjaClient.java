@@ -69,11 +69,12 @@ public class CnpjaClient {
         // 🗄️ Pega a conexão atual do Sankhya
         EntityFacade dwf = EntityFacadeFactory.getDWFFacade();
         JdbcWrapper jdbc = dwf.getJdbcWrapper();
-        jdbc.openSession();
-        NativeSql ns = new NativeSql(jdbc);
+        NativeSql ns = null;
         ResultSet rs = null;
 
         try {
+            jdbc.openSession();
+            ns = new NativeSql(jdbc);
             ns.appendSql("SELECT CHAVE FROM AD_KEYSAPI WHERE CODCHAVE = 2");
 
             rs = ns.executeQuery();

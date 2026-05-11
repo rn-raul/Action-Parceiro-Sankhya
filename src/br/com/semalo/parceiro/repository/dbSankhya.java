@@ -14,13 +14,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 public class dbSankhya {
-    private static final int TAMANHO_MAXIMO_NOME_PARCEIRO = 40;
+    private static final int MAX_PARTNER_NAME_LENGTH = 40;
 
     public void insertDb(ContextoAcao ctx, ParceiroDTO dto, String cnpj, String founded) throws Exception {
         JdbcWrapper jdbc = EntityFacadeFactory.getDWFFacade().getJdbcWrapper();
-        jdbc.openSession();
 
         try {
+            jdbc.openSession();
             LocalDate dataFundacao;
             try {
                 dataFundacao = LocalDate.parse(founded);
@@ -32,10 +32,10 @@ public class dbSankhya {
 
             // Validação para quantidade de caracteres.
             String nome = dto.getNome();
-            String textoAvisoTruncamento = "";
-            if (nome.length() > TAMANHO_MAXIMO_NOME_PARCEIRO) {
-                nome = nome.substring(0, TAMANHO_MAXIMO_NOME_PARCEIRO);
-                textoAvisoTruncamento = "\nAviso: O nome da empresa excedia " + TAMANHO_MAXIMO_NOME_PARCEIRO + " caracteres e foi truncado para salvar no Sankhya.";
+            String truncationWarningMessage = "";
+            if (nome.length() > MAX_PARTNER_NAME_LENGTH) {
+                nome = nome.substring(0, MAX_PARTNER_NAME_LENGTH);
+                truncationWarningMessage = "\nAviso: O nome da empresa excedia " + MAX_PARTNER_NAME_LENGTH + " caracteres e foi truncado para salvar no Sankhya.";
             }
             registro.setCampo("NOMEPARC", nome);
             registro.setCampo("RAZAOSOCIAL", nome);
@@ -129,7 +129,7 @@ public class dbSankhya {
             String mensagem = "Parceiro cadastrado com sucesso!\n" +
                     "Código do Parceiro: " + codParcGerado + "\n" +
                     "Atenção: Se a Cidade estiver como 'Não Informado', verifique o cadastro de CEP." +
-                    textoAvisoTruncamento;
+                    truncationWarningMessage;
             ctx.setMensagemRetorno(mensagem);
 
         } catch (Exception e) {
