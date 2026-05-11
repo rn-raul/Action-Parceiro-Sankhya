@@ -11,21 +11,31 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 public class dbSankhya {
+    private static final int MAX_PARTNER_NAME_LENGTH = 40;
 
     public void insertDb(ContextoAcao ctx, ParceiroDTO dto, String cnpj, String founded) throws Exception {
         JdbcWrapper jdbc = EntityFacadeFactory.getDWFFacade().getJdbcWrapper();
 
         try {
-            LocalDate dataFundacao = LocalDate.parse(founded);
+            jdbc.openSession();
+            LocalDate dataFundacao;
+            try {
+                dataFundacao = LocalDate.parse(founded);
+            } catch (DateTimeParseException e) {
+                throw new Exception("Data de fundação inválida: '" + founded + "'. Formato esperado: yyyy-MM-dd.", e);
+            }
 
             Registro registro = ctx.novaLinha("TGFPAR");
 
             // Validação para quantidade de caracteres.
             String nome = dto.getNome();
-            if (nome.length() > 40) {
-                nome = nome.substring(0, 40);
+            String truncationWarningMessage = "";
+            if (nome.length() > MAX_PARTNER_NAME_LENGTH) {
+                nome = nome.substring(0, MAX_PARTNER_NAME_LENGTH);
+                truncationWarningMessage = "\nAviso: O nome da empresa excedia " + MAX_PARTNER_NAME_LENGTH + " caracteres e foi truncado para salvar no Sankhya.";
             }
             registro.setCampo("NOMEPARC", nome);
             registro.setCampo("RAZAOSOCIAL", nome);
@@ -118,11 +128,14 @@ public class dbSankhya {
 
             String mensagem = "Parceiro cadastrado com sucesso!\n" +
                     "Código do Parceiro: " + codParcGerado + "\n" +
-                    "Atenção: Se a Cidade estiver como 'Não Informado', verifique o cadastro de CEP.";
+                    "Atenção: Se a Cidade estiver como 'Não Informado', verifique o cadastro de CEP." +
+                    truncationWarningMessage;
             ctx.setMensagemRetorno(mensagem);
 
         } catch (Exception e) {
             ctx.mostraErro("Erro ao cadastrar parceiro: " + e.getMessage());
+        } finally {
+            try { JdbcWrapper.closeSession(jdbc); } catch (Exception ignored) {}
         }
     }
 
@@ -138,6 +151,7 @@ public class dbSankhya {
             return rs.getInt("CODUF");
         } finally {
             if (rs != null) { try { rs.close(); } catch (Exception ignored) {} }
+            try { NativeSql.releaseResources(ns); } catch (Exception ignored) {}
         }
     }
 
@@ -157,6 +171,7 @@ public class dbSankhya {
             return v;
         } finally {
             if (rs != null) { try { rs.close(); } catch (Exception ignored) {} }
+            try { NativeSql.releaseResources(ns); } catch (Exception ignored) {}
         }
     }
 
