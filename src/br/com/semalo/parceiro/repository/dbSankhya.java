@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 public class dbSankhya {
+    private static final int TAMANHO_MAXIMO_NOME_PARCEIRO = 40;
 
     public void insertDb(ContextoAcao ctx, ParceiroDTO dto, String cnpj, String founded) throws Exception {
         JdbcWrapper jdbc = EntityFacadeFactory.getDWFFacade().getJdbcWrapper();
@@ -24,17 +25,17 @@ public class dbSankhya {
             try {
                 dataFundacao = LocalDate.parse(founded);
             } catch (DateTimeParseException e) {
-                throw new Exception("Data de fundação inválida recebida da API: '" + founded + "'. Formato esperado: yyyy-MM-dd.", e);
+                throw new Exception("Data de fundação inválida: '" + founded + "'. Formato esperado: yyyy-MM-dd.", e);
             }
 
             Registro registro = ctx.novaLinha("TGFPAR");
 
             // Validação para quantidade de caracteres.
             String nome = dto.getNome();
-            String avisoNomeTruncado = "";
-            if (nome.length() > 40) {
-                nome = nome.substring(0, 40);
-                avisoNomeTruncado = "\nAviso: O nome da empresa excedia 40 caracteres e foi truncado para salvar no Sankhya.";
+            String textoAvisoTruncamento = "";
+            if (nome.length() > TAMANHO_MAXIMO_NOME_PARCEIRO) {
+                nome = nome.substring(0, TAMANHO_MAXIMO_NOME_PARCEIRO);
+                textoAvisoTruncamento = "\nAviso: O nome da empresa excedia " + TAMANHO_MAXIMO_NOME_PARCEIRO + " caracteres e foi truncado para salvar no Sankhya.";
             }
             registro.setCampo("NOMEPARC", nome);
             registro.setCampo("RAZAOSOCIAL", nome);
@@ -128,7 +129,7 @@ public class dbSankhya {
             String mensagem = "Parceiro cadastrado com sucesso!\n" +
                     "Código do Parceiro: " + codParcGerado + "\n" +
                     "Atenção: Se a Cidade estiver como 'Não Informado', verifique o cadastro de CEP." +
-                    avisoNomeTruncado;
+                    textoAvisoTruncamento;
             ctx.setMensagemRetorno(mensagem);
 
         } catch (Exception e) {
