@@ -15,7 +15,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 
-public class cnpjaClient {
+public class CnpjaClient {
 
     private HttpURLConnection getHttpURLConnection(String cnpj) throws Exception {
 
@@ -69,7 +69,7 @@ public class cnpjaClient {
         // 🗄️ Pega a conexão atual do Sankhya
         EntityFacade dwf = EntityFacadeFactory.getDWFFacade();
         JdbcWrapper jdbc = dwf.getJdbcWrapper();
-
+        jdbc.openSession();
         NativeSql ns = new NativeSql(jdbc);
         ResultSet rs = null;
 
@@ -89,6 +89,8 @@ public class cnpjaClient {
             if (rs != null) {
                 try { rs.close(); } catch (Exception ignored) {}
             }
+            try { NativeSql.releaseResources(ns); } catch (Exception ignored) {}
+            try { JdbcWrapper.closeSession(jdbc); } catch (Exception ignored) {}
         }
     }
 

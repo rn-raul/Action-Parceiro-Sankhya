@@ -2,7 +2,7 @@ package br.com.semalo.parceiro;
 
 import br.com.sankhya.extensions.actionbutton.AcaoRotinaJava;
 import br.com.sankhya.extensions.actionbutton.ContextoAcao;
-import br.com.semalo.parceiro.client.cnpjaClient;
+import br.com.semalo.parceiro.client.CnpjaClient;
 import br.com.semalo.parceiro.dto.ParceiroDTO;
 import br.com.semalo.parceiro.dto.EmpresaMapper;
 import br.com.semalo.parceiro.modal.ApiResponse;
@@ -34,7 +34,7 @@ public class Parceiro implements AcaoRotinaJava {
 
         // 🌐 Chamada da API protegida
         try {
-            cnpjaClient client = new cnpjaClient();
+            CnpjaClient client = new CnpjaClient();
             response = client.send(cnpj);
         } catch (Exception e) {
             ctx.mostraErro("Não foi possível consultar a API de CNPJ.\nDetalhes: " + e.getMessage());
