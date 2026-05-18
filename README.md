@@ -114,4 +114,11 @@ O projeto possui tratamento para:
 
 - retorno vazio da API
 
-- As mensagens são exibidas diretamente na rotina do Sankhya.
+  
+## 🏢 Projeto Desenvolvido
+
+Desenvolvido para **Semalo Indústria e Comércio de Alimentos** durante meu período como Desenvolvedor.
+
+## 👨‍💻 Autor
+
+- **Raul** - Desenvolvedor
